@@ -1,0 +1,192 @@
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark  static-top" style="background:black">
+            <div class="container">
+                  <nav class="navbar navbar-light ">
+                          <span class="navbar-brand mb-0 h1">Issue Tracking Tool</span>
+                        </nav>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+              <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                  <li class="nav-item ml-5 custom-link">
+                    <a class="nav-link" style="color:white" [routerLink]="['/Dashboard']" ><b>Dashboard</b></a>
+                  </li>
+                  <li class="nav-item dropdown ml-5">
+                    <a class="nav-link dropdown-toggle" style="color:white" href="#" id="navbardrop" data-toggle="dropdown">
+                        Profile
+                      </a>
+                      <div class="dropdown-menu">
+                          <p style="text-align:center">Profile Name</p>
+                        <b>{{userName}}</b>
+                        <a class="dropdown-item" (click)="logoutFunction()">Logout</a>
+                      </div>
+                  </li>
+                  
+                </ul>
+              </div>
+            </div>
+          </nav>
+    <div class="container mt-4">
+          <div class="card text-center ">
+                <div class="card-header" style="background: black;opacity:0.8;color: white" >
+                  {{title}}
+                </div>
+
+                <div class="card-body">
+                        
+                    <h6 class="card-title "  > <b>Status : </b><span style="color:dodgerblue"><b>{{status}}</b> </span> </h6>
+                   <h6 class="card-title" ><b> Assigned To :</b> <span  > {{assignedTo}}</span> </h6>
+                 
+                   <p class="card-text" style="color:grey">{{description}}.</p>
+                   
+                   <h6>Attachments -</h6>
+                   <a *ngFor="let name of fileName; let i = index" (click)="download(i)" style="cursor: pointer; color: blue"><i class="fas fa-paperclip" ></i> {{name}}
+                     <br></a>
+                  
+                        <a class="btn btn-warning m-2 " (click)="goBack()"  >Go Back</a>
+                      
+                        <a class="btn btn-danger m-2" (click)="deleteIssue()">Delete</a>
+                   
+                        <a class="btn btn-info m-2" data-toggle="modal"  data-target=".bd-example-modal-lg" >Edit</a>
+                    
+                        <a class="btn btn-success m-2 " (click)="addWatch()"  >Watch</a>
+                    
+                     
+                
+              
+                </div>
+                <div class="card-footer text-muted" style="background: black;opacity:0.9;color: white!important">
+                  Created  by <b style="color:skyblue">{{reporterId}}</b> on 2 days ago
+                </div>
+              </div>    
+            </div>
+
+            <div class="container mt-5" >
+                
+                    
+                    <div class="card text-center m-4 " style="box-shadow: 0px 2px 25px slategray">
+                          <div class="card-header" style="border:1px solid black;;color: white;background:black;opacity: 0.8;">
+                            Comments
+                          </div>
+                          
+                          <div class="card-body">
+
+                                <textarea class="form-control" name="comment" [(ngModel)]="comment" style="border: 2px solid slategray;" aria-label="With textarea" placeholder="Enter Comment here...."></textarea>
+                                <button class="btn mt-4" (click)="addComment()" style="background: gray;color: white;margin-left: 90%;" >comment</button>
+                               
+                              <span *ngIf="commnetData">
+                                <span *ngFor="let comments of commnetData.slice().reverse()">
+                                <div class="card mt-4">
+                                        <div class="card-header" style="text-align: left;background:lightslategray;" >
+                                            @{{comments.createdOn | date:"short"}} by <b>{{comments.reporter}}</b>
+                                        </div>
+                                        <div class="card-body">
+                                          <p class="card-text" style="text-align: left!important">{{comments.description}}</p>
+                                        </div>
+                                      </div>
+                                    </span>
+                                  </span>
+                                
+
+                          </div>
+                      
+
+
+                        </div>    
+            </div>
+
+
+     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                  <div class="modal-header">
+                          <h5 class="modal-title">Edit Issue </h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <form >
+                                <div class="form-group">
+                                    <label for="title"><b>Title</b></label>
+                                    <input type="text" class="form-control " id="title" name="title" [(ngModel)]="title" #tit='ngModel' placeholder="Enter title" required=true>
+                                    <div [hidden]="tit.pristine || tit.valid" class="alert alert-info">
+                                        <div *ngIf="tit.errors?.required">
+                                          Please enter title of the issue
+                                        </div>
+                                    </div>                                       
+                                </div>
+
+                                
+                                <div class="form-group">
+                                    <label for="description"><b>Description</b></label>
+                                    <input type="text" class="form-control " id="description" name="description" [(ngModel)]="description" #descrip='ngModel' placeholder="Enter LastName" required=true>
+                                    <div [hidden]="descrip.pristine || descrip.valid" class="alert alert-info">
+                                      <div *ngIf="descrip.errors?.required">
+                                        Please enter description of the issue
+                                      </div>
+                                  </div>  
+                                </div>
+
+                                
+                                <div class="form-group">
+                                    <label for="status"><b>Status</b></label>
+                                    <select  class="form-control " name="status" [(ngModel)]="status" #stat='ngModel' required=true>
+                                      <option *ngFor="let data of allStatus" [value]="data">{{data}}</option>
+                                    </select>
+                                   
+                                    <div [hidden]="stat.pristine || stat.valid" class="alert alert-info">
+                                      <div *ngIf="stat.errors?.required">
+                                        Please enter status of the issue
+                                      </div>
+                                  </div>  
+                                 </div>
+
+                                 
+                                 <div class="form-group">
+                                    <label for="assignedto"><b>Assigned TO</b></label>
+                                    <select  class="form-control " name="assignedToId" [(ngModel)]="assignedToId" #assign='ngModel' required=true>
+                                      <option *ngFor="let user of allUsers" [value]="user.userId">{{user.firstName}} {{user.lastName}}</option>
+                                    </select>
+                                   <div [hidden]="assign.pristine || assign.valid" class="alert alert-info">
+                                      <div *ngIf="assign.errors?.required">
+                                        Please assign to someone
+                                      </div>
+                                  </div>  
+                                  </div>
+
+          <div class="form-group" action="/api/upload" method="POST" enctype="multipart/form-data" style="margin-bottom: 20px; height: auto;">
+            <label style="font-size: 25px; font-style: bold">Attachments</label>
+            <br>
+            <a *ngFor="let name of fileName; let i = index" (click)="download(i)" style="cursor: pointer; color: blue"><i class="fas fa-paperclip" ></i> {{name}}
+              <br></a>
+              <hr>
+            <div class="custom-file mb-3">
+              <input type="file" name="file" id="file" class="custom-file-input" multiple ng2FileSelect [uploader]="uploader">
+              <label for="file" class="custom-file-label">Choose File</label>
+              <div class="uploadList" *ngFor="let item of uploader.queue">
+                <div class="col" style="padding: 5px">{{item.file.name}}</div>
+                <div class="col-sm-4" style="padding: 5px">
+                  <div class="progress">
+                    <div class="progress-bar bg-success" [ngStyle]="{'width': item.progress+'%'}"></div>
+                  </div>
+                </div>
+                <div>
+                  <button style="margin:20px" type="button" class="btn btn-dark" (click)="item.upload()">Upload</button>
+                  <button  type="button" class="btn btn-danger" (click)="item.remove()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button"  class="btn btn-primary" (click)="editIssue()" >upload</button>
+                            </div>
+            </div>
+          </div>
+        </div>  

@@ -1,0 +1,29 @@
+.btn-tomato
+{
+    background-color: tomato;
+    color:white;
+}
+.btn-black
+{
+    background-color:dodgerblue;
+    color:white; 
+}
+
+label
+{
+    color:black;
+}
+
+@media  only screen and (max-width:600px)
+{
+    .card-body
+    {
+        width:100%!important;
+    }
+    .inputCard
+    {
+        display:block!important;
+    
+    }
+}
+

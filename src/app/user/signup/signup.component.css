@@ -1,0 +1,31 @@
+
+@media  only screen and (max-width:600px)
+{
+   
+    .inputCard
+    {
+        display:block!important;
+    
+    }
+}
+
+.btn-tomato
+{
+    background-color:blueviolet;
+    color:white;
+}
+.btn-black
+{
+    background-color:dodgerblue;
+    color:white; 
+}
+
+input
+{
+    border-left:5px solid black;
+}
+
+label
+{
+    color:gray;
+}

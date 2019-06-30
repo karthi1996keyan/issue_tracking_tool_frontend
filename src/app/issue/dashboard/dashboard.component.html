@@ -1,0 +1,225 @@
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark  static-top" style="background:black">
+        <div class="container">
+              <nav class="navbar navbar-light ">
+                      <span class="navbar-brand mb-0 h1">Issue Tracking Tool</span>
+                    </nav>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+             
+                <li class="nav-item ml-5 mt-1">
+                  
+                    <div class="btn-group" >
+                        <button class="btn btn-sm dropdown-toggle" style="color: white!important" type="button" (click)="notifyCount()" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                          Notifications <span class="badge badge-light" *ngIf="!notifyToggler">{{count.length}}</span>
+                        </button>
+                        <div class="dropdown-menu" >
+                          <a class="dropdown-item" *ngFor="let des of notifyData.slice().reverse()" [routerLink]="['/issue/view/',des.issueId]">{{des.description}}</a>
+                        </div>
+                      </div>
+                </li>
+              <li class="nav-item ml-5 custom-link">
+                <a class="nav-link" style="color:white" data-toggle="modal"  data-target=".bd-example-modal-lg" ><b>Create</b></a>
+              </li>
+              <li class="nav-item ml-5">
+               
+              <form class="form-inline my-2 my-lg-0">
+                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="searchData"
+                    name="searchData">
+                  <button class="btn btn-outline-light my-2 my-sm-0" data-toggle="modal"  data-target="#searchModel" type="submit" (click)="searchIssue()">Search</button>
+                </form>
+             </li>
+              <li class="nav-item dropdown ml-5">
+                <a class="nav-link dropdown-toggle" style="color:white" href="#" id="navbardrop" data-toggle="dropdown">
+                    Profile
+                  </a>
+                  <div class="dropdown-menu">
+                      <p style="text-align:center">Profile Name</p>
+                    <b>{{userName}}</b>
+                    <a class="dropdown-item" (click)="logoutFunction()">Logout</a>
+                  </div>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+
+
+      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+                <div class="modal-header">
+                        <h5 class="modal-title">Create Issue </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                            <form >
+                                    <div class="form-group">
+                                        <label for="title"><b>Title</b></label>
+                                        <input type="text" class="form-control " id="title" name="title" [(ngModel)]="title" #tit='ngModel' placeholder="Enter title" required=true>
+                                        <div [hidden]="tit.pristine || tit.valid" class="alert alert-info">
+                                            <div *ngIf="tit.errors?.required">
+                                              Please enter title of the issue
+                                            </div>
+                                        </div>                                       
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description"><b>Description</b></label>
+                                        <input type="text" class="form-control " id="description" name="description" [(ngModel)]="description" #descrip='ngModel' placeholder="Enter LastName" required=true>
+                                        <div [hidden]="descrip.pristine || descrip.valid" class="alert alert-info">
+                                          <div *ngIf="descrip.errors?.required">
+                                            Please enter description of the issue
+                                          </div>
+                                      </div>  
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="status"><b>Status</b></label>
+                                        <select  class="form-control " name="status" [(ngModel)]="status" #stat='ngModel' required=true>
+                                          <option *ngFor="let data of allStatus" [value]="data">{{data}}</option>
+                                        </select>
+                                       
+                                        <div [hidden]="stat.pristine || stat.valid" class="alert alert-info">
+                                          <div *ngIf="stat.errors?.required">
+                                            Please enter status of the issue
+                                          </div>
+                                      </div>  
+                                     </div>
+                                  <div class="form-group">
+                                    <label for="assignedto"><b>Assigned TO</b></label>
+                                    <select  class="form-control " name="assignedTo" [(ngModel)]="assignedTo" #assign='ngModel' required=true>
+                                      <option *ngFor="let user of allUsers" [value]="user.userId">{{user.firstName}} {{user.lastName}}</option>
+                                    </select>
+                                   <div [hidden]="assign.pristine || assign.valid" class="alert alert-info">
+                                      <div *ngIf="assign.errors?.required">
+                                        Please assign to someone
+                                      </div>
+                                  </div>  
+                                  </div>
+                                
+                                  <div class="form-group" action="" method="POST" enctype="multipart/form-data" style="margin-bottom: 20px; height: auto;">
+                                    <label style="font-size: 25px; font-style: bold">Attachments</label>
+                                    <div class="custom-file mb-3">
+                                      <input type="file" name="file" id="file" class="custom-file-input" multiple ng2FileSelect [uploader]="uploader">
+                                      <label for="file" class="custom-file-label">Choose File</label>
+                                      <div class="uploadList" *ngFor="let item of uploader.queue">
+                                        <div class="col" style="padding: 5px">{{item.file.name}}</div>
+                                        <div class="col-sm-4" style="padding: 5px">
+                                          <div class="progress">
+                                            <div class="progress-bar bg-success" [ngStyle]="{'width': item.progress+'%'}"></div>
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <button style="margin:20px" type="button" class="btn btn-dark" (click)="item.upload()">Upload</button>
+                                          <button  type="button" class="btn btn-danger" (click)="item.remove()">Cancel</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                    
+                          </form>
+                    
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" (click)="createIssue()" class="btn btn-primary">create</button>
+                            
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                          </div>
+          </div>
+        </div>
+      </div>      
+    
+<div class="container d-flex flex-wrap mt-5">
+         
+    <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder=" Start searching for a user   ">
+          
+                  <div class="card text-center m-3 mt-5" *ngFor="let issue of assignedIssue | filter:searchText | paginate:{currentPage:p,itemsPerPage:6}">
+                    <div class="card-header" style="background: black;opacity:0.8;color: white">
+                      {{issue.title}}
+                      
+                    </div>
+                    <div class="card-body">
+                            
+                        <h6 class="card-title "  > <b>Status : </b><span style="color:dodgerblue"><b>{{issue.status}}</b> </span> </h6>
+                       <h6 class="card-title" ><b>Reported By :</b> <span  > {{issue.reporter}}</span> </h6>
+                      <p class="card-text" style="color:grey">{{issue.description}}</p>
+                      <a href="#" class="btn btn-danger" [routerLink]="['/issue/view/',issue.issueId]">View</a>
+                    </div>
+                    <div class="card-footer text-muted" style="background: black;opacity:0.9;color: white!important">
+                      Created At : {{issue.createdOn | date:'short'}}
+                    </div>
+
+                  </div>
+                  <br>
+               
+</div>
+
+<div class="container mt-5">
+    <pagination-controls (pageChange)="p=$event" class="my-pagination"></pagination-controls>
+
+</div>
+
+    
+
+
+<div *ngIf="noModel">
+    <div class="modal fade bd-example-modal-lg" id="searchModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+                <div class="modal-header">
+                        <h3 class="modal-title">Search for :  {{searchHeading}}</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                          <div class="container d-flex flex-wrap mt-5">
+             
+                              <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder=" Start searching for a user   ">
+                                    
+                                            <div class="card text-center m-3 mt-5" *ngFor="let issue of allSearchData | filter:searchText | paginate:{currentPage:p,itemsPerPage:6}">
+                                              <div class="card-header" style="background: black;opacity:0.8;color: white">
+                                                {{issue.title}}
+                                                
+                                              </div>
+                                              <div class="card-body">
+                                                      
+                                                  <h6 class="card-title "  > <b>Status : </b><span style="color:dodgerblue"><b>{{issue.status}}</b> </span> </h6>
+                                                 <h6 class="card-title" ><b>Reported By :</b> <span  > {{issue.reporter}}</span> </h6>
+                                                <p class="card-text" style="color:grey">{{issue.description}}</p>
+                                                <a href="#" class="btn btn-danger" [routerLink]="['/issue/view/',issue.issueId]">View</a>
+                                              </div>
+                                              <div class="card-footer text-muted" style="background: black;opacity:0.9;color: white!important">
+                                                Created At : {{issue.createdOn | date:'short'}}
+                                              </div>
+                          
+                                            </div>
+                                            <br>
+                                         
+                          </div>
+                          
+                          <div class="container mt-5">
+                              <pagination-controls (pageChange)="p=$event" class="my-pagination"></pagination-controls>
+                          
+                          </div>
+                          
+                    
+                          </div>
+                          <div class="modal-footer">
+                         
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                          </div>
+          </div>
+        </div>
+      </div>      
+    
+</div>

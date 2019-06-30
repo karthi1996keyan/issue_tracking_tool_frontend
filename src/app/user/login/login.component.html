@@ -1,0 +1,75 @@
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark  static-top" style="background:black">
+  <div class="container">
+        <nav class="navbar navbar-light ">
+                <span class="navbar-brand mb-0 h1">Issue Tracking Tool</span>
+              </nav>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active ml-5">
+          <a class="nav-link" ><b>Login</b>
+                <span class="sr-only">(current)</span>
+              </a>
+        </li>
+        <li class="nav-item ml-5">
+          <a class="nav-link" [routerLink]="['/signup']"><b>Sign up</b></a>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+       
+         
+                <div class="card text-center">
+                        <div class="card-header" style="background:lavender">
+                               <b> Now , tracking issues is easy task !!!</b>
+                        </div>
+                        <div class="card-body align-self-center w-50" >
+                          <p class="card-text">With advanced tracking system , issue will be handled in very good manner with supporting screenshots upload ,watchlist ,comments and notification</p>
+                          <a href="#" class="btn btn-tomato">Want to explore more</a>
+                        </div>
+                </div>
+       
+
+        <div style="display:flex;align-items: center;justify-content: center;" class="inputCard" >
+            
+                      <form class="mt-3" style="box-shadow: 2px 1px 5px grey;padding:30px;" >
+                                <div class="form-group">
+                                  <label for="email"><b>Email</b></label>
+                                  <input type="email" class="form-control" id="email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" name="email" [(ngModel)]="email" #mail='ngModel' aria-describedby="emailHelp" placeholder="Enter email" required=true>
+                                  <div [hidden]="mail.pristine || mail.valid" class="alert alert-info" style="font-size: 12px" >
+                                      <div *ngIf="mail.errors?.required">
+                                        Please enter email
+                                      </div>
+                                      <div *ngIf="mail.errors?.pattern">
+                                        Please enter valid email
+                                      </div>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="password"><b>Password</b></label>
+                                  <input type="password" class="form-control " id="password" minlength=8 pattern="^[A-Za-z0-9@#^&?$!%]{8,14}$" name="password" [(ngModel)]="password" #pass='ngModel' placeholder="Password" required=true>
+                                  <div [hidden]="pass.pristine || pass.valid" class="alert alert-info" style="font-size: 12px">
+                                      <div *ngIf="pass.errors?.required">
+                                        Please enter password
+                                      </div>
+                                      <div *ngIf="pass.errors?.pattern" >
+                                        Please enter valid password
+                                      </div>
+                                  </div>
+
+
+                                </div>
+                                <button type="submit" class="btn btn-black w-100" (click)="loginFunction()">Login</button>
+                                <button class="btn btn-danger mt-2 w-100 " type="button" (click)="googleLogin()">Login with google</button>
+
+                        </form>
+             
+            </div>
+
